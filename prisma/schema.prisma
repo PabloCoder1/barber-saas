@@ -67,8 +67,9 @@ model Service {
   shopId      String
   shop        Shop     @relation(fields: [shopId], references: [id])
   name        String
+  description String?  // 👈 ADICIONE ISSO (opcional)
   price       Decimal  @db.Decimal(10, 2)
-  duration    Int      // Duração em minutos (ex: 30)
+  duration    Int
 
   appointments Appointment[]
 }
