@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Níveis de acesso do sistema
+enum Role {
+  OWNER
+  BARBER
+  CLIENT
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  phone         String    @unique
+  passwordHash  String
+  role          Role      @default(CLIENT)
+  createdAt     DateTime  @default(now())
+
+  // Relações
+  ownedShop     Shop?     @relation("ShopOwner")
+  barberProfile Barber?
+  appointments  Appointment[] @relation("ClientAppointments")
+}
+
+model Shop {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique // URL amigável (ex: meusaas.com/barbearia-do-ze)
+  ownerId   String   @unique
+  owner     User     @relation("ShopOwner", fields: [ownerId], references: [id])
+  createdAt DateTime @default(now())
+
+  barbers       Barber[]
+  services      Service[]
+  appointments  Appointment[]
+}
+
+model Barber {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
+  shopId         String
+  shop           Shop     @relation(fields: [shopId], references: [id])
+  
+  // Gestão Financeira e Agenda
+  commissionRate Float    @default(0.4) // 40% de comissão
+  offDay         Int      // 0 = Domingo, 1 = Segunda, etc...
+
+  // Horários de Expediente Padrão
+  workStart      String   @default("09:00")
+  workEnd        String   @default("19:00")
+  lunchStart     String   @default("12:00")
+  lunchEnd       String   @default("13:00")
+
+  appointments   Appointment[] @relation("BarberAppointments")
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  shopId      String
+  shop        Shop     @relation(fields: [shopId], references: [id])
+  name        String
+  price       Decimal  @db.Decimal(10, 2)
+  duration    Int      // Duração em minutos (ex: 30)
+
+  appointments Appointment[]
+}
+
+model Appointment {
+  id          String   @id @default(cuid())
+  shopId      String
+  shop        Shop     @relation(fields: [shopId], references: [id])
+  clientId    String
+  client      User     @relation("ClientAppointments", fields: [clientId], references: [id])
+  barberId    String
+  barber      Barber   @relation("BarberAppointments", fields: [barberId], references: [id])
+  serviceId   String
+  service     Service  @relation(fields: [serviceId], references: [id])
+
+  // Lógica de Tempo e Valor
+  date        DateTime // Apenas a data (ex: 2026-04-05) para facilitar filtros
+  startTime   DateTime // Timestamp completo (ex: 2026-04-05 14:00:00)
+  endTime     DateTime // startTime + duration do serviço
+  totalPrice  Decimal  @db.Decimal(10, 2) // Gravamos o preço aqui para caso o valor do serviço mude no futuro, o histórico não seja alterado
+  status      String   @default("PENDING") // PENDING, CONFIRMED, COMPLETED, CANCELED
+
+  createdAt   DateTime @default(now())
+}
