@@ -1,7 +1,28 @@
 @import "tailwindcss";
 
+/* ===== DARK MODE (padrão) ===== */
+:root {
+  --bg: #09090b;
+  --bg-card: #111111;
+  --bg-card-alt: #0a0a0a;
+  --border: #27272a;
+  --text: #f4f4f5;
+  --text-muted: #71717a;
+}
+
+/* ===== LIGHT MODE ===== */
+.light {
+  --bg: #f8f8f8;
+  --bg-card: #ffffff;
+  --bg-card-alt: #f1f1f1;
+  --border: #e4e4e7;
+  --text: #09090b;
+  --text-muted: #71717a;
+}
+
 body {
-  background: #0a0a0a;
-  color: #ededed;
+  background-color: var(--bg);
+  color: var(--text);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.2s, color 0.2s;
 }

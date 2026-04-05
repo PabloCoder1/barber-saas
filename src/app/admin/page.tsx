@@ -83,8 +83,11 @@ export default async function AdminDashboard() {
           <span className="text-xl font-bold text-white tracking-tight">BarberPro <span className="text-zinc-600 font-normal">| Gerencial</span></span>
         </div>
         <div className="flex items-center gap-4">
+          <Link href="/admin/dashboard" className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
+            📊 Analytics
+          </Link>
           <Link href="/admin/gerenciar" className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
-            ⚙️ Gerenciar Equipe/Serviços
+            ⚙️ Gerenciar
           </Link>
           <LogoutButton />
         </div>
