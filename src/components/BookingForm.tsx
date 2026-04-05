@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from "next-auth/react";
 
-type Barber = { id: string; user: { name: string }; offDay: number };
+type Barber = { id: string; user: { name: string }; offDay: number; avgRating: number; totalReviews: number };
 type Service = { id: string; name: string; price: number; duration: number };
 type ShopProps = { barbers: Barber[]; services: Service[] };
 
@@ -177,7 +177,14 @@ export default function BookingForm({ shop }: { shop: ShopProps }) {
                                     <div className="text-5xl mb-4">👨‍🦱</div>
                                     <h3 className="font-bold text-white mb-1">{barber.user.name}</h3>
                                     <p className="text-xs text-zinc-500 flex items-center gap-1">
-                                        <span className="text-yellow-500">⭐</span> 4.9 (120 avaliações)
+                                      {barber.totalReviews > 0 ? (
+                                        <>
+                                          <span className="text-yellow-500">⭐</span>
+                                          {barber.avgRating.toFixed(1)} ({barber.totalReviews} {barber.totalReviews === 1 ? 'avaliação' : 'avaliações'})
+                                        </>
+                                      ) : (
+                                        <span className="text-zinc-600">Sem avaliações ainda</span>
+                                      )}
                                     </p>
                                 </button>
                             ))}

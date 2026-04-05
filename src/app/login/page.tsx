@@ -26,24 +26,34 @@ export default function LoginPage() {
       setError("E-mail ou senha incorretos.");
       setIsLoading(false);
     } else {
-      router.push("/barber");
-      router.refresh(); 
+      // Busca o role do usuário para redirecionar corretamente
+      const res = await fetch('/api/auth/session');
+      const session = await res.json();
+      const role = session?.user?.role;
+
+      if (role === "OWNER") {
+        router.push("/admin");
+      } else if (role === "BARBER") {
+        router.push("/barber");
+      } else {
+        router.push("/"); // CLIENT vai para a landing
+      }
+      router.refresh();
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4 font-sans text-zinc-100">
       <div className="bg-[#111111] border border-zinc-800/50 p-8 rounded-2xl shadow-2xl w-full max-w-md flex flex-col items-center">
-        
+
         {/* Logo */}
         <div className="flex items-center gap-2 mb-6 cursor-pointer" onClick={() => router.push('/')}>
-          <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
           </svg>
           <span className="text-2xl font-bold text-white tracking-tight">BarberPro</span>
         </div>
 
-        {/* Títulos */}
         <div className="text-center mb-8 w-full">
           <h1 className="text-2xl font-bold text-white mb-2">Bem-vindo de volta</h1>
           <p className="text-zinc-500 text-sm">Entre para gerenciar seus agendamentos</p>
@@ -58,32 +68,22 @@ export default function LoginPage() {
         <form onSubmit={handleLogin} className="space-y-5 w-full">
           <div>
             <label className="block text-sm font-semibold text-zinc-100 mb-2">Email</label>
-            <input 
-              type="email" 
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-[#1A1A1A] border border-zinc-800 rounded-lg p-3.5 text-white placeholder-zinc-600 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all" 
-              placeholder="seu@email.com" 
+            <input
+              type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-[#1A1A1A] border border-zinc-800 rounded-lg p-3.5 text-white placeholder-zinc-600 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all"
+              placeholder="seu@email.com"
             />
           </div>
           <div>
             <label className="block text-sm font-semibold text-zinc-100 mb-2">Senha</label>
-            <input 
-              type="password" 
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-[#1A1A1A] border border-zinc-800 rounded-lg p-3.5 text-white placeholder-zinc-600 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all" 
-              placeholder="••••••••" 
+            <input
+              type="password" required value={password} onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-[#1A1A1A] border border-zinc-800 rounded-lg p-3.5 text-white placeholder-zinc-600 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 outline-none transition-all"
+              placeholder="••••••••"
             />
           </div>
-
-          <button 
-            type="submit" 
-            disabled={isLoading}
-            className="w-full bg-yellow-500 hover:bg-yellow-400 disabled:bg-zinc-800 disabled:text-zinc-500 text-zinc-950 font-bold py-3.5 rounded-lg transition-colors mt-2"
-          >
+          <button type="submit" disabled={isLoading}
+            className="w-full bg-yellow-500 hover:bg-yellow-400 disabled:bg-zinc-800 disabled:text-zinc-500 text-zinc-950 font-bold py-3.5 rounded-lg transition-colors mt-2">
             {isLoading ? "Entrando..." : "Entrar"}
           </button>
         </form>
@@ -94,11 +94,9 @@ export default function LoginPage() {
           <div className="h-px bg-zinc-800 flex-1"></div>
         </div>
 
-        <button 
-          type="button"
-          onClick={() => signIn('google', { callbackUrl: '/meus-agendamentos' })}
-          className="w-full bg-transparent border border-zinc-800 hover:bg-zinc-900 text-white font-semibold py-3.5 rounded-lg transition-colors flex items-center justify-center gap-3 mb-6"
-        >
+        {/* Google vai para landing também */}
+        <button type="button" onClick={() => signIn('google', { callbackUrl: '/' })}
+          className="w-full bg-transparent border border-zinc-800 hover:bg-zinc-900 text-white font-semibold py-3.5 rounded-lg transition-colors flex items-center justify-center gap-3 mb-6">
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
@@ -111,7 +109,6 @@ export default function LoginPage() {
         <p className="text-zinc-500 text-sm mb-4">
           Não tem uma conta? <a href="#" className="text-yellow-500 font-semibold hover:underline">Criar conta</a>
         </p>
-
         <button onClick={() => router.push('/')} className="text-zinc-500 text-sm font-semibold hover:text-white transition-colors">
           Voltar para a página inicial
         </button>

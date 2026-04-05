@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import prisma from "@/lib/prisma";
 import ThemeToggle from "@/components/ThemeToggle";
+import MobileNav from "@/components/MobileNav";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -23,47 +24,60 @@ export default async function Home() {
     <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans transition-colors duration-200">
 
       {/* NAVBAR */}
-      <nav className="max-w-6xl mx-auto px-6 py-6 flex justify-between items-center border-b border-zinc-200 dark:border-zinc-900/50">
-        <Link href="/" className="flex items-center gap-2">
-          <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <nav className="max-w-6xl mx-auto px-6 py-5 flex justify-between items-center border-b border-zinc-200 dark:border-zinc-900/50">
+        {/* LOGO */}
+        <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+          <svg className="w-7 h-7 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
           </svg>
-          <span className="text-2xl font-bold text-zinc-900 dark:text-white tracking-tight">BarberPro</span>
+          <span className="text-xl font-bold text-zinc-900 dark:text-white tracking-tight">BarberPro</span>
         </Link>
 
-        <div className="flex items-center gap-3">
+        {/* DESKTOP NAV */}
+        <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
           {session ? (
-            <div className="flex items-center gap-4">
-              <span className="text-zinc-500 dark:text-zinc-400 hidden sm:block text-sm">
+            <>
+              <span className="text-zinc-500 dark:text-zinc-400 text-sm">
                 Olá, <strong className="text-zinc-900 dark:text-white">{session.user?.name?.split(" ")[0]}</strong>
               </span>
-              <Link href={painelLink} className="text-sm font-bold text-zinc-700 dark:text-white hover:text-yellow-500 transition-colors">
+              <Link href={painelLink} className="text-sm font-bold text-zinc-700 dark:text-zinc-300 hover:text-yellow-500 transition-colors">
                 {painelNome}
               </Link>
               <Link href="/agendar" className="bg-yellow-500 hover:bg-yellow-400 text-zinc-950 px-5 py-2.5 rounded-lg font-bold transition-colors text-sm">
                 Novo Agendamento
               </Link>
-            </div>
+            </>
           ) : (
             <>
               <Link href="/login" className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white font-medium transition-colors text-sm">
                 Entrar
               </Link>
-              <Link href="/agendar" className="bg-yellow-500 hover:bg-yellow-400 text-zinc-950 px-5 py-2.5 rounded-lg font-bold transition-colors text-sm shadow-[0_0_15px_rgba(234,179,8,0.2)]">
+              <Link href="/agendar" className="bg-yellow-500 hover:bg-yellow-400 text-zinc-950 px-5 py-2.5 rounded-lg font-bold transition-colors text-sm">
                 Agendar Horário
               </Link>
             </>
           )}
         </div>
+
+        {/* MOBILE NAV — hamburguer */}
+        <div className="flex md:hidden items-center gap-2">
+          <ThemeToggle />
+          <MobileNav
+            isLoggedIn={!!session}
+            painelLink={painelLink}
+            painelNome={painelNome}
+            userName={session?.user?.name?.split(" ")[0] || ""}
+          />
+        </div>
       </nav>
 
       {/* HERO */}
-      <main className="max-w-5xl mx-auto px-6 py-32 flex flex-col items-center text-center">
-        <h1 className="text-5xl md:text-7xl font-extrabold text-zinc-900 dark:text-white mb-6 tracking-tight leading-tight">
+      <main className="max-w-5xl mx-auto px-6 py-28 md:py-36 flex flex-col items-center text-center">
+        <h1 className="text-4xl md:text-7xl font-extrabold text-zinc-900 dark:text-white mb-6 tracking-tight leading-tight">
           Agende seu corte com os <br className="hidden md:block" /> melhores barbeiros
         </h1>
-        <p className="text-xl text-zinc-500 dark:text-zinc-400 mb-12 max-w-2xl font-light">
+        <p className="text-lg md:text-xl text-zinc-500 dark:text-zinc-400 mb-12 max-w-2xl font-light">
           Sistema moderno e profissional para agendamento online. Rápido, fácil e sem complicação.
         </p>
         <Link href="/agendar" className="bg-yellow-500 hover:bg-yellow-400 text-zinc-950 px-8 py-4 rounded-xl font-bold text-lg transition-transform hover:scale-105 shadow-[0_0_40px_-10px_rgba(234,179,8,0.3)]">
@@ -72,7 +86,7 @@ export default async function Home() {
       </main>
 
       {/* COMO FUNCIONA */}
-      <section className="bg-zinc-100 dark:bg-[#0a0a0a] py-24 border-y border-zinc-200 dark:border-zinc-900/50 transition-colors duration-200">
+      <section className="bg-zinc-100 dark:bg-[#0a0a0a] py-24 border-y border-zinc-200 dark:border-zinc-900/50">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-zinc-900 dark:text-white mb-16">Como funciona</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
@@ -126,7 +140,7 @@ export default async function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-zinc-200 dark:border-zinc-900 py-10 text-center text-zinc-500 text-sm transition-colors duration-200">
+      <footer className="border-t border-zinc-200 dark:border-zinc-900 py-10 text-center text-zinc-500 text-sm">
         <p>© {new Date().getFullYear()} BarberPro. Todos os direitos reservados.</p>
       </footer>
     </div>

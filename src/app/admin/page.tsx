@@ -4,6 +4,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
+import AdminMobileNav from "@/components/AdminMobileNav";
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
@@ -80,16 +81,18 @@ export default async function AdminDashboard() {
           <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
           </svg>
-          <span className="text-xl font-bold text-white tracking-tight">BarberPro <span className="text-zinc-600 font-normal">| Gerencial</span></span>
+          <span className="text-xl font-bold text-white tracking-tight">BarberPro <span className="text-zinc-600 font-normal hidden sm:inline">| Gerencial</span></span>
         </div>
-        <div className="flex items-center gap-4">
-          <Link href="/admin/dashboard" className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
-            📊 Analytics
-          </Link>
-          <Link href="/admin/gerenciar" className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
-            ⚙️ Gerenciar
-          </Link>
+        {/* DESKTOP */}
+        <div className="hidden md:flex items-center gap-3">
+          <Link href="/" className="text-zinc-500 hover:text-white font-medium transition-colors text-sm">← Início</Link>
+          <Link href="/admin/dashboard" className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">📊 Analytics</Link>
+          <Link href="/admin/gerenciar" className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">⚙️ Gerenciar</Link>
           <LogoutButton />
+        </div>
+        {/* MOBILE */}
+        <div className="flex md:hidden">
+          <AdminMobileNav />
         </div>
       </nav>
 

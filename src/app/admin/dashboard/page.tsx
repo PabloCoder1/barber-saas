@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import LogoutButton from "@/components/LogoutButton";
 import DashboardCharts from "./DashboardCharts";
+import AdminMobileNav from "@/components/AdminMobileNav";
 
 function buildDayRange(startDate: Date, days: number) {
   return Array.from({ length: days }, (_, i) => {
@@ -95,14 +96,15 @@ export default async function AdminDashboardPage() {
           <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
           </svg>
-          <span className="text-xl font-bold text-white tracking-tight">BarberPro <span className="text-zinc-600 font-normal">| Dashboard</span></span>
+          <span className="text-xl font-bold text-white tracking-tight">BarberPro <span className="text-zinc-600 font-normal hidden sm:inline">| Dashboard</span></span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3">
           <Link href="/admin" className="text-sm text-zinc-400 hover:text-white transition-colors">← Visão Geral</Link>
-          <Link href="/admin/gerenciar" className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
-            ⚙️ Gerenciar
-          </Link>
+          <Link href="/admin/gerenciar" className="bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">⚙️ Gerenciar</Link>
           <LogoutButton />
+        </div>
+        <div className="flex md:hidden">
+          <AdminMobileNav />
         </div>
       </nav>
 

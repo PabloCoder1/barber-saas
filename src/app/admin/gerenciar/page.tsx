@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import ManagementForms from "./ManagementForms";
 import ManagementLists from "./ManagementLists";
+import AdminMobileNav from "@/components/AdminMobileNav";
 
 export default async function GerenciarPage() {
   
@@ -36,13 +37,16 @@ export default async function GerenciarPage() {
       <nav className="max-w-6xl mx-auto flex justify-between items-center mb-12 border-b border-zinc-900 pb-6">
         <div className="flex items-center gap-2">
           <span className="text-xl font-bold text-white tracking-tight">
-            BarberPro <span className="text-zinc-600 font-normal">| Gerenciar Equipe e Serviços</span>
+            BarberPro <span className="text-zinc-600 font-normal hidden sm:inline">| Gerenciar</span>
           </span>
         </div>
-        <div className="flex gap-4">
+        <div className="hidden md:flex gap-4">
           <Link href="/admin" className="text-yellow-500 hover:text-yellow-400 font-medium text-sm">
             ← Voltar ao Painel
           </Link>
+        </div>
+        <div className="flex md:hidden">
+          <AdminMobileNav />
         </div>
       </nav>
 

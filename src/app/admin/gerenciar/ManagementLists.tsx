@@ -57,7 +57,7 @@ export default function ManagementLists({ barbers, services }: ManagementListsPr
           <span className="text-yellow-500">✂️</span> Serviços Cadastrados
         </h2>
         <div className="space-y-3">
-          {services.map(service => (
+          {services?.map(service => (
             <div key={service.id} className="bg-[#111] border border-zinc-800 rounded-xl p-4 flex justify-between items-center hover:border-zinc-700 transition-colors">
               <div>
                 <p className="font-bold text-white">{service.name}</p>
@@ -80,7 +80,7 @@ export default function ManagementLists({ barbers, services }: ManagementListsPr
           <span className="text-yellow-500">💈</span> Equipe
         </h2>
         <div className="space-y-3">
-          {barbers.map(barber => (
+          {barbers?.map(barber => (
             <div key={barber.id} className="bg-[#111] border border-zinc-800 rounded-xl p-4 flex justify-between items-center hover:border-zinc-700 transition-colors">
               <div>
                 <p className="font-bold text-white">{barber.user.name}</p>
