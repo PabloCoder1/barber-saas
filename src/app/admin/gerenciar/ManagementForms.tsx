@@ -3,10 +3,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function ManagementForms() {
   const router = useRouter();
-  
+
   // --- ESTADOS DO SERVIÇO ---
   const [serviceName, setServiceName] = useState("");
   const [serviceDuration, setServiceDuration] = useState("");
@@ -26,19 +27,19 @@ export default function ManagementForms() {
     const res = await fetch('/api/admin/services', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        name: serviceName, 
-        duration: serviceDuration, 
-        price: servicePrice 
+      body: JSON.stringify({
+        name: serviceName,
+        duration: serviceDuration,
+        price: servicePrice
       })
     });
 
     if (res.ok) {
-      alert("Serviço adicionado com sucesso!");
+      toast.success("Serviço adicionado com sucesso!");
       setServiceName(""); setServiceDuration(""); setServicePrice("");
       router.refresh(); // Atualiza a lista de serviços que fica no ManagementLists
     } else {
-      alert("Erro ao adicionar serviço.");
+      toast.error("Erro ao adicionar serviço.");
     }
   };
 
@@ -49,28 +50,28 @@ export default function ManagementForms() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: barberName, 
-        email: barberEmail, 
-        phone: barberPhone, 
-        password: barberPassword, 
-        commissionRate: barberCommission, 
+        name: barberName,
+        email: barberEmail,
+        phone: barberPhone,
+        password: barberPassword,
+        commissionRate: barberCommission,
         offDay: barberOffDay
       })
     });
 
     if (res.ok) {
-      alert("Barbeiro adicionado com sucesso!");
-      setBarberName(""); setBarberEmail(""); setBarberPhone(""); 
+      toast.success("Barbeiro adicionado com sucesso!");
+      setBarberName(""); setBarberEmail(""); setBarberPhone("");
       setBarberPassword(""); setBarberCommission("");
       router.refresh(); // Atualiza a lista de barbeiros
     } else {
-      alert("Erro ao adicionar barbeiro. Verifique se o e-mail já existe.");
+      toast.error("Erro ao adicionar barbeiro. Verifique se o e-mail já existe.");
     }
   };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        
+
       {/* --- FORMULÁRIO DE SERVIÇO --- */}
       <div className="bg-[#111111] p-8 rounded-2xl border border-zinc-800 shadow-lg">
         <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">

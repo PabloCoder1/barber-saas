@@ -4,6 +4,7 @@ import "./globals.css";
 import SessionWrapper from "@/components/SessionWrapper";
 import PWARegister from "@/components/PWARegister";
 import ThemeProvider from "@/components/ThemeProvider";
+import { Toaster } from 'sonner';
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -45,6 +46,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ThemeProvider>
           <SessionWrapper>
             <PWARegister />
+            
+            {/* O TOASTER FOI ADICIONADO AQUI */}
+            <Toaster theme="dark" position="bottom-right" richColors />
+            
             {children}
           </SessionWrapper>
         </ThemeProvider>

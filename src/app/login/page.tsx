@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link"; // O Link está importado aqui!
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -26,7 +27,6 @@ export default function LoginPage() {
       setError("E-mail ou senha incorretos.");
       setIsLoading(false);
     } else {
-      // Busca o role do usuário para redirecionar corretamente
       const res = await fetch('/api/auth/session');
       const session = await res.json();
       const role = session?.user?.role;
@@ -36,7 +36,7 @@ export default function LoginPage() {
       } else if (role === "BARBER") {
         router.push("/barber");
       } else {
-        router.push("/"); // CLIENT vai para a landing
+        router.push("/");
       }
       router.refresh();
     }
@@ -46,7 +46,6 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4 font-sans text-zinc-100">
       <div className="bg-[#111111] border border-zinc-800/50 p-8 rounded-2xl shadow-2xl w-full max-w-md flex flex-col items-center">
 
-        {/* Logo */}
         <div className="flex items-center gap-2 mb-6 cursor-pointer" onClick={() => router.push('/')}>
           <svg className="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
@@ -94,7 +93,6 @@ export default function LoginPage() {
           <div className="h-px bg-zinc-800 flex-1"></div>
         </div>
 
-        {/* Google vai para landing também */}
         <button type="button" onClick={() => signIn('google', { callbackUrl: '/' })}
           className="w-full bg-transparent border border-zinc-800 hover:bg-zinc-900 text-white font-semibold py-3.5 rounded-lg transition-colors flex items-center justify-center gap-3 mb-6">
           <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -107,7 +105,8 @@ export default function LoginPage() {
         </button>
 
         <p className="text-zinc-500 text-sm mb-4">
-          Não tem uma conta? <a href="#" className="text-yellow-500 font-semibold hover:underline">Criar conta</a>
+          {/* MUDANÇA AQUI: Usando o <Link> apontando para /cadastro */}
+          Não tem uma conta? <Link href="/cadastro" className="text-yellow-500 font-semibold hover:underline">Criar conta</Link>
         </p>
         <button onClick={() => router.push('/')} className="text-zinc-500 text-sm font-semibold hover:text-white transition-colors">
           Voltar para a página inicial
